@@ -16,7 +16,13 @@ public class Index2D implements Pixel2D {
     public double distance2D(Pixel2D t) {
         double ans = 0;
         /////// add your code below ///////
+        if (t == null) {
+            throw new RuntimeException("p2 is null");
+        }
 
+        double dx = t.getX() - this._x;
+        double dy = t.getY() - this._y;
+        ans = Math.sqrt(dx * dx + dy * dy);
         ///////////////////////////////////
         return ans;
     }
