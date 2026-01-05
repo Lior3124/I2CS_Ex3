@@ -95,7 +95,7 @@ public class Map implements Map2D {
 	public int getPixel(int x, int y) {
         int ans = -1;
         if(x<this._map[0].length && y<this._map.length){
-            ans = this._map[y][x];
+            ans = this._map[x][y];
         }
         return ans;
     }
@@ -106,7 +106,7 @@ public class Map implements Map2D {
         int x = p.getX();
         int y = p.getY();
         if(x<this._map[0].length && y<this._map.length) {
-            ans = _map[y][x];
+            ans = _map[x][y];
         }
         return ans;
 	}
@@ -114,7 +114,7 @@ public class Map implements Map2D {
 	/////// add your code below ///////
 	public void setPixel(int x, int y, int v) {
         if(x<this._map[0].length && y<this._map.length) {
-            _map[y][x] = v;
+            _map[x][y] = v;
         }
     }
 	@Override
@@ -123,7 +123,7 @@ public class Map implements Map2D {
         int x = p.getX();
         int y = p.getY();
         if(x<this._map[0].length && y<this._map.length) {
-            _map[y][x] = v;
+            _map[x][y] = v;
         }
 	}
 	@Override
