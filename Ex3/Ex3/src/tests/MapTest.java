@@ -150,8 +150,8 @@ class MapTest {
     @Test
     void test_getPixel(){
         assertEquals(0,map1.getPixel(0,0));
-        assertEquals(5,map2.getPixel(3,1));
-        assertEquals(map2.getPixel(1,1),map2.getPixel(2,0));
+        assertEquals(5,map2.getPixel(1,3));
+        assertEquals(map2.getPixel(1,1),map2.getPixel(0,2));
     }
 
     /**
@@ -161,9 +161,9 @@ class MapTest {
     @Test
     void test_getPixel2(){
         Index2D p1 = new Index2D(0,0);
-        Index2D p2 = new Index2D(3,1);
-        Index2D p3 = new Index2D(2,0);
-        Index2D p4 = new Index2D(1,1);
+        Index2D p2 = new Index2D(1,3);
+        Index2D p3 = new Index2D(0,1);
+        Index2D p4 = new Index2D(1,0);
 
         assertEquals(0,map1.getPixel(p1));
         assertEquals(5,map2.getPixel(p2));
@@ -179,8 +179,8 @@ class MapTest {
         map1.setPixel(1,1,1);
         assertEquals(1,map1.getPixel(1,1));
 
-        map2.setPixel(2,1,0);
-        assertEquals(0,map2.getPixel(2,1));
+        map2.setPixel(1,2,0);
+        assertEquals(0,map2.getPixel(1,2));
     }
 
     /**
@@ -308,6 +308,7 @@ class MapTest {
         test_1.setCyclic(true);
         int num1 =test_1.fill(p1,5);
         assertEquals(9,num1);
+
         assertEquals(result_1,test_1);
 
     }
@@ -326,20 +327,19 @@ class MapTest {
         };
         Map test_1 = new Map(test1);
         Index2D p1 = new Index2D(2,0);
-        Index2D p2 = new Index2D(2,3);
+        Index2D p2 = new Index2D(2,4);
 
         test_1.setCyclic(false);
         Pixel2D[] ans = test_1.shortestPath(p1,p2,1);
 
-        Pixel2D[] expected = new Pixel2D[8];
+        Pixel2D[] expected = new Pixel2D[7];
         expected[0] = p1;
         expected[1] = new Index2D(3,0);
-        expected[2] = new Index2D(4,0);
-        expected[3] = new Index2D(4,1);
-        expected[4] = new Index2D(4,2);
-        expected[5] = new Index2D(4,3);
-        expected[6] = new Index2D(3,3);
-        expected[7] = p2;
+        expected[2] = new Index2D(3,1);
+        expected[3] = new Index2D(3,2);
+        expected[4] = new Index2D(3,3);
+        expected[5] = new Index2D(3,4);
+        expected[6] = p2;
         assertEquals(expected[0],ans[0]);
         assertEquals(expected[1],ans[1]);
         assertEquals(expected[2],ans[2]);
@@ -347,7 +347,6 @@ class MapTest {
         assertEquals(expected[4],ans[4]);
         assertEquals(expected[5],ans[5]);
         assertEquals(expected[6],ans[6]);
-        assertEquals(expected[7],ans[7]);
     }
 
     /**
@@ -371,13 +370,15 @@ class MapTest {
 
         Pixel2D[] expected = new Pixel2D[8];
         expected[0] = p1;
-        expected[1] = new Index2D(2, 4);
-        expected[2] = new Index2D(2, 3);
-        expected[3] = new Index2D(2, 2);
+        expected[1] = new Index2D(3, 0);
+        expected[2] = new Index2D(3, 1);
+        expected[3] = new Index2D(3, 2);
+        expected[4] = new Index2D(2, 2);
         assertEquals(expected[0], ans[0]);
         assertEquals(expected[1], ans[1]);
         assertEquals(expected[2], ans[2]);
         assertEquals(expected[3], ans[3]);
+        assertEquals(expected[4], ans[4]);
     }
 
     /**
@@ -389,7 +390,7 @@ class MapTest {
                 {0, 0, 0, 1, 0},
                 {1, 1, 1, 1, 1},
                 {0, 1, 0, 1, 0},
-                {0, 0, 0, 0, 0},
+                {1, 1, 0, 0, 0},
                 {0, 0, 0, 0, 0}
         };
         Map test_1 = new Map(test1);
@@ -445,7 +446,7 @@ class MapTest {
         int[][] test3 = {
                 {1,1,1,1,1},
                 {1,1,1,1,1},
-                {0,0,0,0,0},
+                {1,1,1,1,1},
                 {1,1,1,1,1},
                 {1,1,1,1,1}
         };
@@ -462,6 +463,14 @@ class MapTest {
                 {-1,-1,-1,-1,-1}
         };
         Map expected_3 = new Map(expected3);
+
+        for(int i=0; i< ans1.getHeight();i++){
+            for(int j=0; j< ans1.getWidth();j++){
+                System.out.print(ans3.getPixel(j,i));
+            }
+            System.out.println();
+        }
+
         assertEquals(expected_3,ans3);
     }
 

@@ -36,7 +36,10 @@ public class Index2D implements Pixel2D {
        /////// you do NOT need to add your code below ///////
         if(t instanceof Pixel2D) {
             Pixel2D p = (Pixel2D) t;
-            ans = (this.distance2D(p)==0);
+            if(this.getX() == p.getX() && this.getY() == p.getY()) {
+                return true;
+            }
+            //ans = (this.distance2D(p)==0);
         }
        ///////////////////////////////////
         return ans;

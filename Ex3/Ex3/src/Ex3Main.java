@@ -23,7 +23,7 @@ import exe.ex3.game.PacmanGame;
  */
 public class Ex3Main {
     private static Character _cmd;
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         play1();
     }
     public static void play1() {

@@ -6,6 +6,7 @@ import exe.ex3.game.PacManAlgo;
 import exe.ex3.game.PacmanGame;
 
 import java.awt.*;
+import java.util.Arrays;
 
 import static assignments.Ex3.GameInfo.CYCLIC_MODE;
 
@@ -49,7 +50,8 @@ public class Ex3Algo implements PacManAlgo{
         String[] parts = game.getPos(0).toString().split(",");
         Index2D pacman = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
         int[][] board = game.getGame(0);
-		int dir = moveP(pacman,board);
+        Pixel2D [] path = closestPoint(pacman, board);
+		int dir = followPath(pacman,path,board);
 		return dir;
 	}
 	private static void printBoard(int[][] b) {
@@ -73,8 +75,10 @@ public class Ex3Algo implements PacManAlgo{
 		return dirs[ind];
 	}
 
-
-    private static int moveP(Index2D pacman,int [][] board){
+    /**
+     * moves pacman almost randomly, right, left, up and down, based on if there is a pink point.
+    */
+    private static int moveP_next(Index2D pacman,int [][] board){
         int ans =0;
         boolean danger = false;
         Map game = new Map(board);
@@ -103,10 +107,67 @@ public class Ex3Algo implements PacManAlgo{
             }
             if(game.getPixel(down)==3){
                 return Game.DOWN;
+            }else{
+                Pixel2D [] path = closestPoint(pacman, board);
+                System.out.println(Arrays.toString(path));
+                return followPath(pacman,path,board);
             }
         }
         return ans;
     }
 
+    private static Pixel2D[] closestPoint(Index2D pacman,int [][] board){
+        Pixel2D[] ans = null;
+        int dis =1;
+        Map game = new Map(board);
+        Map2D copy = new Map(board);
+        copy = copy.allDistance(pacman,1);
+        while(ans == null){
+            for(int i =0;i<game.getHeight();i++){
+                for(int j =0;j<game.getWidth();j++){
+                    if((game.getPixel(j,i) == 3 || game.getPixel(j,i) == 5) && copy.getPixel(j,i) == dis){
+                        Index2D des = new Index2D(j,i);
+                        ans = game.shortestPath(pacman,des,1);
+                    }
+                    if (ans != null) {
+                        return ans; // Found a valid path,exit
+                    }
+                }
+            }
+            dis++;
+        }
+
+        return  ans;
+    };
+
+    private static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
+        Map game  = new Map(board);
+
+      //get left right up down based on if cyclic
+        Index2D right = new Index2D(pacman.getX() + 1, pacman.getY());
+        Index2D left = new Index2D(pacman.getX() - 1, pacman.getY());
+        Index2D up = new Index2D(pacman.getX(), pacman.getY() + 1);
+        Index2D down = new Index2D(pacman.getX(), pacman.getY() - 1);
+        if(CYCLIC_MODE){
+            right = new Index2D((pacman.getX() + 1) %game.getWidth(), pacman.getY());
+            left = new Index2D((pacman.getX() - 1 + game.getWidth()) %game.getWidth(), pacman.getY());
+            up = new Index2D(pacman.getX(), (pacman.getY() + 1) % game.getHeight());
+            down = new Index2D(pacman.getX(), (pacman.getY() - 1 + game.getHeight()) % game.getHeight());
+        }
+
+        if(right.equals(path[1])){
+            return Game.RIGHT;
+        }
+        if(left.equals(path[1])){
+            return Game.LEFT;
+        }
+        if(up.equals(path[1])){
+            return Game.UP;
+        }
+        if(down.equals(path[1])){
+            return Game.DOWN;
+        }
+        return Game.DOWN;
+    };;
 
 }

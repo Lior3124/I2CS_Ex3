@@ -94,7 +94,7 @@ public class Map implements Map2D {
 	/////// add your code below ///////
 	public int getPixel(int x, int y) {
         int ans = -1;
-        if(x<this._map[0].length && y<this._map.length){
+        if(y<this._map[0].length && x<this._map.length){
             ans = this._map[x][y];
         }
         return ans;
@@ -105,7 +105,7 @@ public class Map implements Map2D {
         int ans = -1;
         int x = p.getX();
         int y = p.getY();
-        if(x<this._map[0].length && y<this._map.length) {
+        if(y<this._map[0].length && x<this._map.length) {
             ans = _map[x][y];
         }
         return ans;
@@ -113,7 +113,7 @@ public class Map implements Map2D {
 	@Override
 	/////// add your code below ///////
 	public void setPixel(int x, int y, int v) {
-        if(x<this._map[0].length && y<this._map.length) {
+        if(y<this._map[0].length && x<this._map.length) {
             _map[x][y] = v;
         }
     }
@@ -122,7 +122,7 @@ public class Map implements Map2D {
 	public void setPixel(Pixel2D p, int v) {
         int x = p.getX();
         int y = p.getY();
-        if(x<this._map[0].length && y<this._map.length) {
+        if(y<this._map[0].length && x<this._map.length) {
             _map[x][y] = v;
         }
 	}
@@ -146,9 +146,9 @@ public class Map implements Map2D {
 	 * BFS like shortest the computation based on iterative raster implementation of BFS, see:
 	 * https://en.wikipedia.org/wiki/Breadth-first_search
 	 */
-	public Pixel2D[] shortestPath(Pixel2D p1, Pixel2D p2, int obsColor) {
-		Pixel2D[] ans = null;  // the result.
-		/////// add your code below ///////
+    public Pixel2D[] shortestPath(Pixel2D p1, Pixel2D p2, int obsColor) {
+        Pixel2D[] ans = null;  // the result.
+
         //create a copy of the current map
         Map copy = new Map(this.getWidth(),this.getHeight(),0);
         for(int i=0;i<copy.getHeight();i++){
@@ -187,16 +187,15 @@ public class Map implements Map2D {
                 this.setPixel(j,i,copy.getPixel(j,i));
             }
         }
-		///////////////////////////////////
-		return ans;
-	}
+        return ans;
+    }
 	@Override
 	/////// add your code below ///////
 	public boolean isInside(Pixel2D p) {
 
         boolean ans = true;
-        int height = this._map.length;
-        int width = this._map[0].length;
+        int height = this._map[0].length;
+        int width = this._map.length;
         if(p.getX()>=width || p.getY()>=height || p.getX()<0 || p.getY()<0){
             ans = false;
         }
@@ -215,9 +214,8 @@ public class Map implements Map2D {
     }
 	@Override
 	/////// add your code below ///////
-	public Map2D allDistance(Pixel2D start, int obsColor) {
-		Map2D ans = null;  // the result.
-		/////// add your code below ///////
+    public Map2D allDistance(Pixel2D start, int obsColor) {
+        Map2D ans = null;  // the result.
         Pixel2D[] pixel_arr = null;
         Index2D end = null;
         //create a copy of the current map
@@ -239,9 +237,9 @@ public class Map implements Map2D {
                 }
             }
         }
-		///////////////////////////////////
-		return ans;
-	}
+
+        return ans;
+    }
 
 
     ////////////////private_methods//////////////////
@@ -263,8 +261,8 @@ public class Map implements Map2D {
                 Index2D right = new Index2D(x + 1, y);
                 int[] right_arr = new int[]{x + 1, y};
                 if (cyclic) {
-                    right = new Index2D((x + 1) % this._map[0].length, y);
-                    right_arr = new int[]{(x + 1) % this._map[0].length, y};
+                    right = new Index2D((x + 1) % this._map.length, y);
+                    right_arr = new int[]{(x + 1) % this._map.length, y};
                 }
                 if (this.isInside(right) && this.getPixel(right) == old_v) {
                     q.add(right_arr);
@@ -273,8 +271,8 @@ public class Map implements Map2D {
                 Index2D left = new Index2D(x - 1, y);
                 int[] left_arr = new int[]{x - 1, y};
                 if (cyclic) {
-                    left = new Index2D((x - 1+this._map[0].length) % this._map[0].length, y);
-                    left_arr = new int[]{(x - 1+this._map[0].length) % this._map[0].length, y};
+                    left = new Index2D((x - 1+this._map.length) % this._map.length, y);
+                    left_arr = new int[]{(x - 1+this._map.length) % this._map.length, y};
                 }
                 if (this.isInside(left) && this.getPixel(left) == old_v) {
                     q.add(left_arr);
@@ -283,8 +281,8 @@ public class Map implements Map2D {
                 Index2D up = new Index2D(x, y + 1);
                 int[] up_arr = new int[]{x, y + 1};
                 if (cyclic) {
-                    up = new Index2D(x, (y + 1) % this._map.length);
-                    up_arr = new int[]{x, (y + 1) % this._map.length};
+                    up = new Index2D(x, (y + 1) % this._map[0].length);
+                    up_arr = new int[]{x, (y + 1) % this._map[0].length};
                 }
                 if (this.isInside(up) && this.getPixel(up) == old_v) {
                     q.add(up_arr);
@@ -293,8 +291,8 @@ public class Map implements Map2D {
                 Index2D down = new Index2D(x, y - 1);
                 int[] down_arr = new int[]{x, y - 1};
                 if (cyclic) {
-                    down = new Index2D(x, (y - 1+this._map.length) % this._map.length);
-                    down_arr = new int[]{x, (y - 1+this._map.length) % this._map.length};
+                    down = new Index2D(x, (y - 1+this._map[0].length) % this._map[0].length);
+                    down_arr = new int[]{x, (y - 1+this._map[0].length) % this._map[0].length};
                 }
                 if (this.isInside(down) && this.getPixel(down) == old_v) {
                     q.add(down_arr);
