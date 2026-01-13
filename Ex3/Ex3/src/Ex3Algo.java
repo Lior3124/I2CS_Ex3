@@ -18,6 +18,9 @@ import static assignments.Ex3.GameInfo.CYCLIC_MODE;
  */
 public class Ex3Algo implements PacManAlgo{
 	private int _count;
+    //new variable path, declared here because don't want it to be declared multiple times
+    private Pixel2D [] path = null;
+
 	public Ex3Algo() {_count=0;}
 	@Override
 	/**
@@ -47,10 +50,12 @@ public class Ex3Algo implements PacManAlgo{
 			int up = Game.UP, left = Game.LEFT, down = Game.DOWN, right = Game.RIGHT;
 		}
 		_count++;
+        //get the board and pacman position
         String[] parts = game.getPos(0).toString().split(",");
         Index2D pacman = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
         int[][] board = game.getGame(0);
-        Pixel2D [] path = closestPoint(pacman, board);
+        //get the path to the closest point and then move
+        path = closestPoint(pacman, board);
 		int dir = followPath(pacman,path,board);
 		return dir;
 	}
