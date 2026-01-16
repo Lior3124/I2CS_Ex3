@@ -128,6 +128,13 @@ public class Ex3Algo implements PacManAlgo{
         return ans;
     }
 
+    /**
+     * return the index2D of the closest ghost to pacman
+     * @param pacman - the Index2D of pacman
+     * @param board - represents the game's matrix
+     * @param ghosts - an array with all the ghosts
+     * @return Index2D of the closest ghost to pacman
+     */
     private static Index2D closestGhost(Index2D pacman,int[][] board,GhostCL[] ghosts){
         int closest = 0;
         Index2D ghost_cord = null;
@@ -147,6 +154,12 @@ public class Ex3Algo implements PacManAlgo{
         return  ghost_cord_closest;
     }
 
+    /**
+     * return the path to the closest pink or green point(pink or green based on what is closer)
+     * @param pacman - the Index2D of pacman
+     * @param board - represents the game's matrix
+     * @return - and array of Pixel2D representing the path to the closest point(pink or green)
+     */
     private static Pixel2D[] closestPoint(Index2D pacman,int [][] board){
         Pixel2D[] ans = null;
         int dis =1;
@@ -171,6 +184,11 @@ public class Ex3Algo implements PacManAlgo{
         return  ans;
     }
 
+    /**
+     * return if a ghost is in the start
+     * @param ghost - GhostCl representing a ghost
+     * @return true if the ghost is in the starting rectangle false if isn't
+     */
     private static boolean isGhost_in_start(GhostCL ghost){
         boolean ans = false;
         String[] parts_closest = ghost.getPos(0).split(",");
@@ -198,6 +216,13 @@ public class Ex3Algo implements PacManAlgo{
         return false;
     }
 
+    /**
+     * return the path to the closest ghost
+     * @param ghosts - an array of GhostCl containing all the ghosts
+     * @param pacman - the Index2D of pacman
+     * @param board - represents the game's matrix
+     * @return an array of Pixel2D representing the path to the closest ghost
+     */
     private static Pixel2D[] closestGhost_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
         Pixel2D[] ans = null;
         Map  game = new Map(board);
@@ -208,6 +233,13 @@ public class Ex3Algo implements PacManAlgo{
         return ans;
     }
 
+    /**
+     * moves pacman in the direction of a given path
+     * @param pacman - the Index2D of pacman
+     * @param path - an array of Pixel2D representing the path which pacman should move by
+     * @param board - represents the game's matrix
+     * @return returns int(right -4, left -2, up-1, down-3)
+     */
     private static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
         Map game  = new Map(board);
 
@@ -283,7 +315,13 @@ public class Ex3Algo implements PacManAlgo{
         return ans;
     }
 
-    private static boolean isDeadEnd(Index2D pos, int[][] board, Map game) {
+    /**
+     * return if the pos it got is a dead end
+     * @param pos - Index2D representing pacman potential next move
+     * @param game - the map of the game
+     * @return true if pos is a dead end false if it isn't
+     */
+    private static boolean isDeadEnd(Index2D pos,Map game) {
         int paths = 0;
 
         // Get neighbors based on your cyclic logic
@@ -310,12 +348,26 @@ public class Ex3Algo implements PacManAlgo{
         return paths <= 1;
     }
 
+    /**
+     * returns the distance of pacman from a ghost
+     * @param direction Index2D representing pacman or pacman's next move
+     * @param ghost - Index2D of a ghost
+     * @param board - represents the game's matrix
+     * @return
+     */
     private static double dis_from_ghost(Pixel2D direction, Index2D ghost, int[][] board) {
         Map game = new Map(board);
         Pixel2D[] path = game.shortestPath(direction, ghost, 1);
         return path.length;
     }
 
+    /**
+     * calculates the danger in a specific point(Pacman's potential next move), closer ghosts have more impact on danger
+     * @param direction - Index2D representing pacman's potential next move
+     * @param ghosts - an array of GhostCl representing all the ghosts in the game
+     * @param board - represents the game's matrix
+     * @return a double that represents the danger a certain coordinates in the game
+     */
     private static double calculateDanger(Pixel2D direction, GhostCL[] ghosts, int[][] board) {
         double danger = 0;
         Index2D ghost_cord = null;
@@ -331,6 +383,13 @@ public class Ex3Algo implements PacManAlgo{
         return danger;
     }
 
+    /**
+     * return where to move pacman in order to run away from teh ghosts in the most efficient way
+     * @param ghosts an array of GhostCl representing all the ghosts in the game
+     * @param pacman - Index2D of pacman
+     * @param board -represents the game's matrix
+     * @return an int based on where pacman should go next in order to run away from the ghosts(right -4, left -2, up-1, down-3)
+     */
     private static int run(GhostCL[] ghosts, Index2D pacman, int [][] board){
         Map game = new Map(board);
         double max_score = Double.NEGATIVE_INFINITY;
@@ -362,7 +421,7 @@ public class Ex3Algo implements PacManAlgo{
                 //Safety first - distance from ghost more important than green
                 double totalDanger = -(ghostDanger * 3) - (greenDist*2);
 
-                if (isDeadEnd(direction, board, game)) {
+                if (isDeadEnd(direction,game)) {
                     totalDanger -= 500.0; // Huge penalty for traps
                 }
 
@@ -411,6 +470,12 @@ public class Ex3Algo implements PacManAlgo{
         return true;
     }
 
+    /**
+     * return the distance to the nearest green point
+     * @param pos - pacman's next potential move
+     * @param board - represents the game's matrix
+     * @return return a double the is equals to the distance of pos from the next green point
+     */
     private static double distToNearestGreen(Pixel2D pos, int[][] board) {
         Map game = new Map(board);
         double min_dist = Double.POSITIVE_INFINITY;
@@ -427,6 +492,13 @@ public class Ex3Algo implements PacManAlgo{
         return min_dist;
     }
 
+    /**
+     * decides the final move of pacman, based on danger, eating pink points and eating ghosts
+     * @param ghosts - an array of GhostCl representing all the ghosts in the game
+     * @param pacman - Index2D representing pacman
+     * @param board - represents the game's matrix
+     * @return return and int based on where pacman should move
+     */
     private static int calculate_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
         int direction = Game.RIGHT;
         Pixel2D[] path = null;
