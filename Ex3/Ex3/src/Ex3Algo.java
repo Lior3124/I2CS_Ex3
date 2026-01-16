@@ -54,7 +54,7 @@ public class Ex3Algo implements PacManAlgo{
         String[] parts = game.getPos(0).toString().split(",");
         Index2D pacman = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
         int[][] board = game.getGame(0);
-        //get the path to the closest point and then move
+        //get the path to the closest point and then move with the path
         path = closestPoint(pacman, board);
 		int dir = followPath(pacman,path,board);
 		return dir;
@@ -143,7 +143,8 @@ public class Ex3Algo implements PacManAlgo{
         }
 
         return  ans;
-    };
+    }
+
 
     private static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
         Map game  = new Map(board);
@@ -173,6 +174,64 @@ public class Ex3Algo implements PacManAlgo{
             return Game.DOWN;
         }
         return Game.DOWN;
-    };;
+    }
+
+    /**
+     * returns if pacman is in eat ghosts state (remain time to eat is bigger than time_switch_to_run)
+     * @param ghosts an array of ghosts
+     * @return true if pacman should be in eat state, false if isn't
+     */
+    private static boolean eat_state(GhostCL[] ghosts){
+        boolean ans = false;
+        for (GhostCL ghost : ghosts) {
+            if (ghost.remainTimeAsEatable(0) > Paramaters.time_switch_to_run) {
+                return true;
+            }
+        }
+        return ans;
+    }
+
+
+    /**
+     * return if pacman is within min_distance of a ghost(if pacman should run)
+     * @param ghosts an array of the ghosts
+     * @param pacman the coordinates of pacman(pacman himself)
+     * @param board the board of the game
+     * @return true if pacman should run false if he shouldn't
+     */
+    private static boolean run_state(GhostCL[] ghosts,Index2D pacman,int [][] board){
+        boolean ans = false;
+        Map game = new Map(board);
+        Pixel2D[] path = null;
+        Index2D ghost_cord = null;
+
+        for(GhostCL ghost : ghosts){
+            String[] parts = ghost.getPos(0).split(",");
+            ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            path = game.shortestPath(pacman,ghost_cord,1);
+            if(path.length<Paramaters.min_distance){
+                return true;
+            }
+
+        }
+
+        return ans;
+    }
+
+    /**
+     * if pacman no in run state or eat state then he should collect pinks
+     * @param ghosts an array of the ghosts
+     * @param pacman the coordinates of pacman(pacman himself)
+     * @param board the board of the game
+     * @return true if pacman is in eat pink state, false if isn't
+     */
+    private static boolean eat_pink_state(GhostCL[] ghosts,Index2D pacman,int [][] board){
+        if(eat_state(ghosts)){
+            return false;
+        }else if(run_state(ghosts,pacman,board)){
+            return false;
+        }
+        return true;
+    }
 
 }
