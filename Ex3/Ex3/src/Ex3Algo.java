@@ -128,6 +128,25 @@ public class Ex3Algo implements PacManAlgo{
         return ans;
     }
 
+    private static Index2D closestGhost(Index2D pacman,int[][] board,GhostCL[] ghosts){
+        int closest = 0;
+        Index2D ghost_cord = null;
+        double min_dis = Double.POSITIVE_INFINITY;
+
+        for(int i =0 ;i<ghosts.length;i++) {
+            String[] parts = ghosts[i].getPos(0).split(",");
+            ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            if((ghost_cord.distance2D(pacman) <  min_dis) && (ghosts[i].getStatus()==1) && !(isGhost_in_start(ghosts[i]))) {
+                min_dis = ghost_cord.distance2D(pacman);
+                closest = i;
+            }
+        }
+        String[] parts_closest = ghosts[closest].getPos(0).split(",");
+        Index2D ghost_cord_closest = new Index2D(Integer.parseInt(parts_closest[0]), Integer.parseInt(parts_closest[1]));
+
+        return  ghost_cord_closest;
+    }
+
     private static Pixel2D[] closestPoint(Index2D pacman,int [][] board){
         Pixel2D[] ans = null;
         int dis =1;
@@ -182,20 +201,9 @@ public class Ex3Algo implements PacManAlgo{
     private static Pixel2D[] closestGhost_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
         Pixel2D[] ans = null;
         Map  game = new Map(board);
-        int closest = 0;
-        Index2D ghost_cord = null;
-        double min_dis = Double.POSITIVE_INFINITY;
 
-        for(int i =0 ;i<ghosts.length;i++) {
-            String[] parts = ghosts[i].getPos(0).split(",");
-            ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-            if((ghost_cord.distance2D(pacman) <  min_dis) && (ghosts[i].getStatus()==1) && !(isGhost_in_start(ghosts[i]))) {
-                min_dis = ghost_cord.distance2D(pacman);
-                closest = i;
-            }
-        }
-        String[] parts_closest = ghosts[closest].getPos(0).split(",");
-        Index2D ghost_cord_closest = new Index2D(Integer.parseInt(parts_closest[0]), Integer.parseInt(parts_closest[1]));
+        Index2D ghost_cord_closest = closestGhost(pacman,board,ghosts);
+
         ans = game.shortestPath(pacman,ghost_cord_closest,1);
         return ans;
     }
@@ -235,18 +243,19 @@ public class Ex3Algo implements PacManAlgo{
      * @param ghosts an array of ghosts
      * @return true if pacman should be in eat state, false if isn't
      */
-    private static boolean eat_state(GhostCL[] ghosts,Index2D pacman){
+    private static boolean eat_state(GhostCL[] ghosts,Index2D pacman,int[][] board){
         boolean ans = false;
+        Map game = new Map(board);
         for (GhostCL ghost : ghosts) {
             String[] parts = ghost.getPos(0).split(",");
             Index2D ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-            if (ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run && ghost.getStatus() == 1 && !(isGhost_in_start(ghost)) && (ghost_cord.distance2D(pacman) <= Parameters.max_eat_ghost_dis) ) {
+            Pixel2D[] path = game.shortestPath(pacman,ghost_cord,1);
+            if (ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run && ghost.getStatus() == 1 && !(isGhost_in_start(ghost)) && (path.length) <= Parameters.max_eat_ghost_dis) {
                 return true;
             }
         }
         return ans;
     }
-
 
     /**
      * return if pacman is within min_distance of a ghost(if pacman should run)
@@ -264,13 +273,126 @@ public class Ex3Algo implements PacManAlgo{
             String[] parts = ghost.getPos(0).split(",");
             ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
             if(!(ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run)){
-                if (ghost_cord.distance2D(pacman) < Parameters.min_distance){
+                Pixel2D[] path = game.shortestPath(pacman,ghost_cord,1);
+                if (path.length< Parameters.min_distance){
                     return true;
                 }
             }
         }
 
         return ans;
+    }
+
+    private static boolean isDeadEnd(Index2D pos, int[][] board, Map game) {
+        int paths = 0;
+
+        // Get neighbors based on your cyclic logic
+        Index2D right = new Index2D(pos.getX() + 1, pos.getY());
+        Index2D left = new Index2D(pos.getX() - 1, pos.getY());
+        Index2D up = new Index2D(pos.getX(), pos.getY() + 1);
+        Index2D down = new Index2D(pos.getX(), pos.getY() - 1);
+
+        if (CYCLIC_MODE) {
+            right = new Index2D((pos.getX() + 1) % game.getWidth(), pos.getY());
+            left = new Index2D((pos.getX() - 1 + game.getWidth()) % game.getWidth(), pos.getY());
+            up = new Index2D(pos.getX(), (pos.getY() + 1) % game.getHeight());
+            down = new Index2D(pos.getX(), (pos.getY() - 1 + game.getHeight()) % game.getHeight());
+        }
+
+        // Check each neighbor - if it's NOT a wall (1), it's a valid path
+        if (game.getPixel(right) != 1) paths++;
+        if (game.getPixel(left) != 1)  paths++;
+        if (game.getPixel(up) != 1)    paths++;
+        if (game.getPixel(down) != 1)  paths++;
+
+        // A dead end is a tile where you only have 1 neighbor to move to
+        // (The one you just came from)
+        return paths <= 1;
+    }
+
+    private static double dis_from_ghost(Pixel2D direction, Index2D ghost, int[][] board) {
+        Map game = new Map(board);
+        Pixel2D[] path = game.shortestPath(direction, ghost, 1);
+        return path.length;
+    }
+
+    private static double calculateDanger(Pixel2D direction, GhostCL[] ghosts, int[][] board) {
+        double danger = 0;
+        Index2D ghost_cord = null;
+        for (GhostCL g : ghosts) {
+            if (g.getStatus() == 1 && !isGhost_in_start(g)) {
+                String[] parts = g.getPos(0).split(",");
+                ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+                double d = dis_from_ghost(direction, ghost_cord, board);
+                // Closer ghosts are more dangerous than far ones
+                danger += 1000.0 / (d * d + 1);
+            }
+        }
+        return danger;
+    }
+
+    private static int run(GhostCL[] ghosts, Index2D pacman, int [][] board){
+        Map game = new Map(board);
+        double max_score = Double.NEGATIVE_INFINITY;
+        int move = 4;
+
+        Index2D closest_ghost = closestGhost(pacman, board, ghosts);
+
+        //get left right up down based on if cyclic
+        Index2D right = new Index2D(pacman.getX() + 1, pacman.getY());
+        Index2D left = new Index2D(pacman.getX() - 1, pacman.getY());
+        Index2D up = new Index2D(pacman.getX(), pacman.getY() + 1);
+        Index2D down = new Index2D(pacman.getX(), pacman.getY() - 1);
+        if(CYCLIC_MODE){
+            right = new Index2D((pacman.getX() + 1) %game.getWidth(), pacman.getY());
+            left = new Index2D((pacman.getX() - 1 + game.getWidth()) %game.getWidth(), pacman.getY());
+            up = new Index2D(pacman.getX(), (pacman.getY() + 1) % game.getHeight());
+            down = new Index2D(pacman.getX(), (pacman.getY() - 1 + game.getHeight()) % game.getHeight());
+        }
+        Index2D[] moves = {right,left,up,down};
+
+        for (Index2D direction : moves) {
+
+            if (game.getPixel(direction) != 1) {
+                double ghostDanger = calculateDanger(direction,ghosts,board);
+
+                // 2. Calculate Green Point Attraction
+                double greenDist = distToNearestGreen(direction, board);
+
+                //Safety first - distance from ghost more important than green
+                double totalDanger = -(ghostDanger * 3) - (greenDist*2);
+
+                if (isDeadEnd(direction, board, game)) {
+                    totalDanger -= 500.0; // Huge penalty for traps
+                }
+
+                if (totalDanger > max_score) {
+                    max_score = totalDanger;
+                    if(direction.equals(right)){
+                        if(game.getPixel(right)==5){
+                            return Game.RIGHT;
+                        }
+                        move = Game.RIGHT;
+                    } else if (direction.equals(left)) {
+                        if(game.getPixel(left)==5){
+                            return Game.LEFT;
+                        }
+                        move = Game.LEFT;
+                    } else if (direction.equals(up)) {
+                        if(game.getPixel(up)==5){
+                            return Game.UP;
+                        }
+                        move = Game.UP;
+                    } else if (direction.equals(down)) {
+                        if(game.getPixel(down)==5){
+                            return Game.DOWN;
+                        }
+                        move = Game.DOWN;
+                    }
+                }
+            }
+        }
+        return move;
     }
 
     /**
@@ -281,7 +403,7 @@ public class Ex3Algo implements PacManAlgo{
      * @return true if pacman is in eat pink state, false if isn't
      */
     private static boolean eat_pink_state(GhostCL[] ghosts,Index2D pacman,int [][] board){
-        if(eat_state(ghosts,pacman)){
+        if(eat_state(ghosts,pacman,board)){
             return false;
         }else if(run_state(ghosts,pacman,board)){
             return false;
@@ -289,12 +411,27 @@ public class Ex3Algo implements PacManAlgo{
         return true;
     }
 
+    private static double distToNearestGreen(Pixel2D pos, int[][] board) {
+        Map game = new Map(board);
+        double min_dist = Double.POSITIVE_INFINITY;
+
+        for (int y = 0; y < game.getHeight(); y++) {
+            for (int x = 0; x < game.getWidth(); x++) {
+                if (game.getPixel(x, y) == 5) {
+                    Index2D point = new Index2D(x, y);
+                    double d = (game.shortestPath(pos,point,1)).length;
+                    if (d < min_dist) min_dist = d;
+                }
+            }
+        }
+        return min_dist;
+    }
 
     private static int calculate_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
         int direction = Game.RIGHT;
         Pixel2D[] path = null;
         boolean run = run_state(ghosts,pacman,board);
-        boolean eat = eat_state(ghosts,pacman);
+        boolean eat = eat_state(ghosts,pacman,board);
         boolean collect =  eat_pink_state(ghosts,pacman,board);
 
         if (collect) {
@@ -304,8 +441,12 @@ public class Ex3Algo implements PacManAlgo{
             path = closestGhost_path(ghosts, pacman, board);
             if(path == null) System.out.println("Debug: Failed to find path to EATABLE GHOST");
         } else if (run) {
-            path = closestPoint(pacman, board);
-            if(path == null) System.out.println("Debug: Failed to find path while RUNNING");
+            return run(ghosts, pacman, board);
+        }
+
+        if(path == null){
+            System.out.println("path is null");
+            return randomDir();
         }
 
         direction = followPath(pacman,path,board);
