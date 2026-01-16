@@ -128,6 +128,7 @@ public class Ex3Algo implements PacManAlgo{
         return ans;
     }
 
+
     /**
      * return the index2D of the closest ghost to pacman
      * @param pacman - the Index2D of pacman
@@ -153,6 +154,7 @@ public class Ex3Algo implements PacManAlgo{
 
         return  ghost_cord_closest;
     }
+
 
     /**
      * return the path to the closest pink or green point(pink or green based on what is closer)
@@ -183,6 +185,7 @@ public class Ex3Algo implements PacManAlgo{
 
         return  ans;
     }
+
 
     /**
      * return if a ghost is in the start
@@ -216,6 +219,7 @@ public class Ex3Algo implements PacManAlgo{
         return false;
     }
 
+
     /**
      * return the path to the closest ghost
      * @param ghosts - an array of GhostCl containing all the ghosts
@@ -232,6 +236,7 @@ public class Ex3Algo implements PacManAlgo{
         ans = game.shortestPath(pacman,ghost_cord_closest,1);
         return ans;
     }
+
 
     /**
      * moves pacman in the direction of a given path
@@ -270,6 +275,7 @@ public class Ex3Algo implements PacManAlgo{
         return Game.DOWN;
     }
 
+
     /**
      * returns if pacman is in eat ghosts state (remain time to eat is bigger than time_switch_to_run)
      * @param ghosts an array of ghosts
@@ -288,6 +294,7 @@ public class Ex3Algo implements PacManAlgo{
         }
         return ans;
     }
+
 
     /**
      * return if pacman is within min_distance of a ghost(if pacman should run)
@@ -314,6 +321,7 @@ public class Ex3Algo implements PacManAlgo{
 
         return ans;
     }
+
 
     /**
      * return if the pos it got is a dead end
@@ -348,18 +356,20 @@ public class Ex3Algo implements PacManAlgo{
         return paths <= 1;
     }
 
+
     /**
      * returns the distance of pacman from a ghost
      * @param direction Index2D representing pacman or pacman's next move
      * @param ghost - Index2D of a ghost
      * @param board - represents the game's matrix
-     * @return
+     * @return a double that is the distance of direction from a ghost
      */
     private static double dis_from_ghost(Pixel2D direction, Index2D ghost, int[][] board) {
         Map game = new Map(board);
         Pixel2D[] path = game.shortestPath(direction, ghost, 1);
         return path.length;
     }
+
 
     /**
      * calculates the danger in a specific point(Pacman's potential next move), closer ghosts have more impact on danger
@@ -382,6 +392,7 @@ public class Ex3Algo implements PacManAlgo{
         }
         return danger;
     }
+
 
     /**
      * return where to move pacman in order to run away from teh ghosts in the most efficient way
@@ -454,6 +465,7 @@ public class Ex3Algo implements PacManAlgo{
         return move;
     }
 
+
     /**
      * if pacman no in run state or eat state then he should collect pinks
      * @param ghosts an array of the ghosts
@@ -469,6 +481,7 @@ public class Ex3Algo implements PacManAlgo{
         }
         return true;
     }
+
 
     /**
      * return the distance to the nearest green point
@@ -491,6 +504,7 @@ public class Ex3Algo implements PacManAlgo{
         }
         return min_dist;
     }
+
 
     /**
      * decides the final move of pacman, based on danger, eating pink points and eating ghosts
