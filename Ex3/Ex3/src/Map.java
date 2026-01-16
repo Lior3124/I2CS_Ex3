@@ -323,7 +323,7 @@ public class Map implements Map2D {
             count = curr[2];
             Index2D newp = new Index2D(x, y);
 
-            if (this.getPixel(newp) == -1 && this.isInside(newp)) {
+
                 this.setPixel(x, y, count);
                 count++;
 
@@ -371,11 +371,7 @@ public class Map implements Map2D {
                     q.add(down_arr);
 
                 }
-            }
-        }
-        //if the queue is empty and haven't returned anything then there is no path and return -1
-        if(q.isEmpty()){
-            return -1;
+
         }
         return count-1;
     }
@@ -406,10 +402,10 @@ public class Map implements Map2D {
             Index2D down = new Index2D(p.getX(), p.getY() - 1);
             if(cyclic){
 
-                right = new Index2D((p.getX() + 1) %this.getWidth(), p.getY());
-                left = new Index2D((p.getX() - 1 + this.getWidth()) %this.getWidth(), p.getY());
-                up = new Index2D(p.getX(), (p.getY() + 1) % this.getHeight());
-                down = new Index2D(p.getX(), (p.getY() - 1 + this.getHeight()) % this.getHeight());
+                right = new Index2D((p.getX() + 1) %this._map[0].length, p.getY());
+                left = new Index2D((p.getX() - 1 + this._map[0].length) %this._map[0].length, p.getY());
+                up = new Index2D(p.getX(), (p.getY() + 1) % this._map.length);
+                down = new Index2D(p.getX(), (p.getY() - 1 + this._map.length) % this._map.length);
             }
             //check if left right up down are the path if any of them are they are now p, the new point we look at.
             if(this.isInside(right) && this.getPixel(right)==count){

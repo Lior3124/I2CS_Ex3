@@ -189,7 +189,6 @@ public class Ex3Algo implements PacManAlgo{
         for(int i =0 ;i<ghosts.length;i++) {
             String[] parts = ghosts[i].getPos(0).split(",");
             ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-            System.out.println(!(isGhost_in_start(ghosts[i])));
             if((ghost_cord.distance2D(pacman) <  min_dis) && (ghosts[i].getStatus()==1) && !(isGhost_in_start(ghosts[i]))) {
                 min_dis = ghost_cord.distance2D(pacman);
                 closest = i;
@@ -236,10 +235,12 @@ public class Ex3Algo implements PacManAlgo{
      * @param ghosts an array of ghosts
      * @return true if pacman should be in eat state, false if isn't
      */
-    private static boolean eat_state(GhostCL[] ghosts){
+    private static boolean eat_state(GhostCL[] ghosts,Index2D pacman){
         boolean ans = false;
         for (GhostCL ghost : ghosts) {
-            if (ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run && ghost.getStatus() == 1 && !(isGhost_in_start(ghost))) {
+            String[] parts = ghost.getPos(0).split(",");
+            Index2D ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+            if (ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run && ghost.getStatus() == 1 && !(isGhost_in_start(ghost)) && (ghost_cord.distance2D(pacman) <= Parameters.max_eat_ghost_dis) ) {
                 return true;
             }
         }
@@ -280,7 +281,7 @@ public class Ex3Algo implements PacManAlgo{
      * @return true if pacman is in eat pink state, false if isn't
      */
     private static boolean eat_pink_state(GhostCL[] ghosts,Index2D pacman,int [][] board){
-        if(eat_state(ghosts)){
+        if(eat_state(ghosts,pacman)){
             return false;
         }else if(run_state(ghosts,pacman,board)){
             return false;
@@ -293,15 +294,18 @@ public class Ex3Algo implements PacManAlgo{
         int direction = Game.RIGHT;
         Pixel2D[] path = null;
         boolean run = run_state(ghosts,pacman,board);
-        boolean eat = eat_state(ghosts);
+        boolean eat = eat_state(ghosts,pacman);
         boolean collect =  eat_pink_state(ghosts,pacman,board);
 
-        if(collect){
+        if (collect) {
             path = closestPoint(pacman, board);
+            if(path == null) System.out.println("Debug: Failed to find path to PINK DOT");
         } else if (eat) {
             path = closestGhost_path(ghosts, pacman, board);
+            if(path == null) System.out.println("Debug: Failed to find path to EATABLE GHOST");
         } else if (run) {
-            path  = closestPoint(pacman, board);
+            path = closestPoint(pacman, board);
+            if(path == null) System.out.println("Debug: Failed to find path while RUNNING");
         }
 
         direction = followPath(pacman,path,board);
