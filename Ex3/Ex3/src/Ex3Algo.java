@@ -50,15 +50,18 @@ public class Ex3Algo implements PacManAlgo{
 			int up = Game.UP, left = Game.LEFT, down = Game.DOWN, right = Game.RIGHT;
 		}
 		_count++;
-        //get the board and pacman position
+        //get the board,pacman position and ghosts
         String[] parts = game.getPos(0).toString().split(",");
         Index2D pacman = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
         int[][] board = game.getGame(0);
+        GhostCL[] ghosts = game.getGhosts(0);
+
         //get the path to the closest point and then move with the path
         path = closestPoint(pacman, board);
-		int dir = followPath(pacman,path,board);
+		int dir = calculate_path(ghosts,pacman,board);
 		return dir;
 	}
+
 	private static void printBoard(int[][] b) {
 		for(int y =0;y<b[0].length;y++){
 			for(int x =0;x<b.length;x++){
@@ -68,12 +71,14 @@ public class Ex3Algo implements PacManAlgo{
 			System.out.println();
 		}
 	}
+
 	private static void printGhosts(GhostCL[] gs) {
 		for(int i=0;i<gs.length;i++){
 			GhostCL g = gs[i];
 			System.out.println(i+") status: "+g.getStatus()+",  type: "+g.getType()+",  pos: "+g.getPos(0)+",  time: "+g.remainTimeAsEatable(0));
 		}
 	}
+
 	private static int randomDir() {
 		int[] dirs = {Game.UP, Game.LEFT, Game.DOWN, Game.RIGHT};
 		int ind = (int)(Math.random()*dirs.length);
@@ -145,7 +150,6 @@ public class Ex3Algo implements PacManAlgo{
         return  ans;
     }
 
-
     private static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
         Map game  = new Map(board);
 
@@ -184,7 +188,7 @@ public class Ex3Algo implements PacManAlgo{
     private static boolean eat_state(GhostCL[] ghosts){
         boolean ans = false;
         for (GhostCL ghost : ghosts) {
-            if (ghost.remainTimeAsEatable(0) > Paramaters.time_switch_to_run) {
+            if (ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run) {
                 return true;
             }
         }
@@ -202,17 +206,16 @@ public class Ex3Algo implements PacManAlgo{
     private static boolean run_state(GhostCL[] ghosts,Index2D pacman,int [][] board){
         boolean ans = false;
         Map game = new Map(board);
-        Pixel2D[] path = null;
         Index2D ghost_cord = null;
 
         for(GhostCL ghost : ghosts){
             String[] parts = ghost.getPos(0).split(",");
             ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
-            path = game.shortestPath(pacman,ghost_cord,1);
-            if(path.length<Paramaters.min_distance){
-                return true;
+            if(!(ghost.remainTimeAsEatable(0) > Parameters.time_switch_to_run)){
+                if(ghost_cord.distance2D(pacman)<Parameters.min_distance){
+                    return true;
+                }
             }
-
         }
 
         return ans;
@@ -232,6 +235,20 @@ public class Ex3Algo implements PacManAlgo{
             return false;
         }
         return true;
+    }
+
+
+    private static int calculate_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
+        int direction = Game.RIGHT;
+        Pixel2D[] path = null;
+        boolean run = run_state(ghosts,pacman,board);
+        boolean eat = eat_state(ghosts);
+        boolean collect =  eat_pink_state(ghosts,pacman,board);
+
+        path = closestPoint(pacman,board);
+
+        direction = followPath(pacman,path,board);
+        return direction;
     }
 
 }
