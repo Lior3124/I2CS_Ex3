@@ -436,7 +436,7 @@ public class Ex3Algo implements PacManAlgo{
                     totalDanger -= 500.0; //penalty for traps
                 }
                 if (Double.isInfinite(totalDanger)) {
-                    totalDanger = -1000.0*Parameters.min_distance;
+                    totalDanger = -1000000.0*Parameters.min_distance;
                 }
 
                 System.out.println(totalDanger);
