@@ -383,8 +383,9 @@ public class Ex3Algo implements PacManAlgo{
                 String[] parts = g.getPos(0).split(",");
                 ghost_cord = new Index2D(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
                 double d = dis_from_ghost(direction, ghost_cord, board);
-                // Closer ghosts are more dangerous than far ones
-                danger += 1000.0 / (d * d + 1);
+                d++;
+                // Closer ghosts are more dangerous than far ones, +1 to not divide by zero
+                danger += 1000.0 / ((d * d) + 1);
                 if(d<=1){
                     danger = danger+1000;
                 }
@@ -426,20 +427,18 @@ public class Ex3Algo implements PacManAlgo{
 
             if (game.getPixel(direction) != 1) {
                 double ghostDanger = calculateDanger(direction,ghosts,board);
-
-                if (Double.isInfinite(ghostDanger)) {
-                    ghostDanger = Double.MAX_VALUE / 10.0;
-                }
-
-                // 2. Calculate Green Point Attraction
                 double greenDist = distToNearestGreen(direction, board);
 
-                //Safety first - distance from ghost more important than green
+                //distance from ghost more important than green
                 totalDanger = -(ghostDanger * 5) - (greenDist*2);
 
                 if (isDeadEnd(direction,game)) {
-                    totalDanger -= 500.0; // Huge penalty for traps
+                    totalDanger -= 500.0; //penalty for traps
                 }
+                if (Double.isInfinite(totalDanger)) {
+                    totalDanger -= -1000.0;
+                }
+
                 System.out.println(totalDanger);
                 if (totalDanger > max_score) {
                     max_score = totalDanger;
