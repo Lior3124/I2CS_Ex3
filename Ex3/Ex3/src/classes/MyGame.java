@@ -32,7 +32,7 @@ public class MyGame implements Game {
 
     @Override
     public int getStatus() {
-        return 0;
+        return _status;
     }
 
     @Override

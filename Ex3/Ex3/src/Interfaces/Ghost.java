@@ -22,5 +22,5 @@ public interface Ghost {
     /**
      * @return remaining time the ghost is eatable
      */
-    public double remainTimeAsEatable();
+    public double getRemainTimeAsEatable();
 }
