@@ -87,48 +87,6 @@ public class Ex3Algo implements PacManAlgo{
     ////////////////////////////////////////
 
     /**
-     * moves pacman almost randomly, right, left, up and down, based on if there is a pink point.
-     */
-    private static int moveP_next(Index2D pacman,int [][] board){
-        int ans =0;
-        boolean danger = false;
-        Map game = new Map(board);
-
-        while(!danger){
-
-            //get left right up down based on if cyclic
-            Index2D right = new Index2D(pacman.getX() + 1, pacman.getY());
-            Index2D left = new Index2D(pacman.getX() - 1, pacman.getY());
-            Index2D up = new Index2D(pacman.getX(), pacman.getY() + 1);
-            Index2D down = new Index2D(pacman.getX(), pacman.getY() - 1);
-            if(CYCLIC_MODE){
-                right = new Index2D((pacman.getX() + 1) %game.getWidth(), pacman.getY());
-                left = new Index2D((pacman.getX() - 1 + game.getWidth()) %game.getWidth(), pacman.getY());
-                up = new Index2D(pacman.getX(), (pacman.getY() + 1) % game.getHeight());
-                down = new Index2D(pacman.getX(), (pacman.getY() - 1 + game.getHeight()) % game.getHeight());
-            }
-            if(game.getPixel(right)==3){
-                return Game.RIGHT;
-            }
-            if(game.getPixel(left)==3){
-                return Game.LEFT;
-            }
-            if(game.getPixel(up)==3){
-                return Game.UP;
-            }
-            if(game.getPixel(down)==3){
-                return Game.DOWN;
-            }else{
-                Pixel2D [] path = closestPoint(pacman, board);
-                System.out.println(Arrays.toString(path));
-                return followPath(pacman,path,board);
-            }
-        }
-        return ans;
-    }
-
-
-    /**
      * return the index2D of the closest ghost to pacman
      * @param pacman - the Index2D of pacman
      * @param board - represents the game's matrix
@@ -442,19 +400,15 @@ public class Ex3Algo implements PacManAlgo{
 
                 if(prevDir == 4 && direction.equals(right)){
                     totalDanger += 5;
-                    System.out.println("right");
                 }
                 if(prevDir == 2 && direction.equals(left)){
                     totalDanger += 5;
-                    System.out.println("left");
                 }
                 if(prevDir == 1 && direction.equals(up)){
                     totalDanger += 5;
-                    System.out.println("up");
                 }
                 if(prevDir == 3 && direction.equals(down)){
                     totalDanger += 5;
-                    System.out.println("down");
                 }
 
                 System.out.println(totalDanger);
@@ -485,7 +439,6 @@ public class Ex3Algo implements PacManAlgo{
             }
         }
         if(move ==0 ){
-            System.out.println("rand");
             return randomDir();
         }else{
             return  move;
@@ -554,7 +507,6 @@ public class Ex3Algo implements PacManAlgo{
             path = closestGhost_path(ghosts, pacman, board);
             if(path == null) System.out.println("Debug: Failed to find path to EATABLE GHOST");
         } else if (run) {
-            System.out.println("run");
             return run(ghosts, pacman, board,prevDir);
         }
 
