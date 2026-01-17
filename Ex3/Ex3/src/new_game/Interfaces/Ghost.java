@@ -1,4 +1,4 @@
-package assignments.Ex3.Interfaces;
+package assignments.Ex3.new_game.Interfaces;
 
 import assignments.Ex3.Index2D;
 

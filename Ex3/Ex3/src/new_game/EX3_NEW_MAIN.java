@@ -1,12 +1,12 @@
 package assignments.Ex3.new_game;
 
-import assignments.Ex3.GUI.GUI;
-import assignments.Ex3.GUI.StdDraw;
+import assignments.Ex3.new_game.GUI.GUI;
+import assignments.Ex3.new_game.GUI.StdDraw;
 import assignments.Ex3.Index2D;
-import assignments.Ex3.Interfaces.Ghost;
+import assignments.Ex3.new_game.Interfaces.Ghost;
 import assignments.Ex3.Map;
-import assignments.Ex3.classes.MyGame;
-import assignments.Ex3.classes.MyGhost;
+import assignments.Ex3.new_game.classes.MyGame;
+import assignments.Ex3.new_game.classes.MyGhost;
 
 import java.util.ArrayList;
 

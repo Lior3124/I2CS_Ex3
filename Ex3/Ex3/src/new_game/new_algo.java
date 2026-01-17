@@ -1,9 +1,9 @@
 package assignments.Ex3.new_game;
 
 import assignments.Ex3.*;
-import assignments.Ex3.Interfaces.Ghost;
+import assignments.Ex3.new_game.Interfaces.Ghost;
 import exe.ex3.game.Game;
-import java.awt.*;
+
 import java.util.ArrayList;
 import static assignments.Ex3.GameInfo.CYCLIC_MODE;
 

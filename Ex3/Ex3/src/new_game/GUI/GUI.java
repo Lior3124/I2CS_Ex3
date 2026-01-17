@@ -1,9 +1,9 @@
-package assignments.Ex3.GUI;
+package assignments.Ex3.new_game.GUI;
 
 import assignments.Ex3.Index2D;
-import assignments.Ex3.Interfaces.Ghost;
+import assignments.Ex3.new_game.Interfaces.Ghost;
 import assignments.Ex3.Map;
-import assignments.Ex3.classes.MyGame;
+import assignments.Ex3.new_game.classes.MyGame;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -25,12 +25,12 @@ public class GUI {
 
         //Draw the map (Walls and Dots)
         Map map = game.getMap();
-        for (int x = 0; x < map.getWidth(); x++) {
-            for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x <= map.getWidth(); x++) {
+            for (int y = 0; y <= map.getHeight(); y++) {
                 int pixel = map.getPixel(x, y);
                 if (pixel == 1) { // Wall
                     StdDraw.setPenColor(Color.BLUE);
-                    StdDraw.filledSquare(x, y, 0.5);
+                    StdDraw.filledSquare(x, y, 0.3);
                 } else if (pixel == 3 || pixel == 5) { // Dots/Powerups
                     StdDraw.setPenColor(pixel == 3 ? Color.PINK : Color.GREEN);
                     StdDraw.filledCircle(x, y, 0.2);

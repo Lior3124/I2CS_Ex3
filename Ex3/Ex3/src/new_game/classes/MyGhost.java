@@ -1,15 +1,13 @@
-package assignments.Ex3.classes;
+package assignments.Ex3.new_game.classes;
 
-import assignments.Ex3.Ex3Algo;
 import assignments.Ex3.Index2D;
-import assignments.Ex3.Interfaces.Game;
-import assignments.Ex3.Interfaces.Ghost;
+import assignments.Ex3.new_game.Interfaces.Game;
+import assignments.Ex3.new_game.Interfaces.Ghost;
 import assignments.Ex3.Map;
 import assignments.Ex3.Pixel2D;
 
 import java.util.Random;
 
-import static assignments.Ex3.Ex3Algo.followPath;
 import static assignments.Ex3.GameInfo.CYCLIC_MODE;
 
 

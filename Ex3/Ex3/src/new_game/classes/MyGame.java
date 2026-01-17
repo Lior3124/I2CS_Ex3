@@ -1,8 +1,8 @@
-package assignments.Ex3.classes;
+package assignments.Ex3.new_game.classes;
 
 import assignments.Ex3.Index2D;
-import assignments.Ex3.Interfaces.Game;
-import assignments.Ex3.Interfaces.Ghost;
+import assignments.Ex3.new_game.Interfaces.Game;
+import assignments.Ex3.new_game.Interfaces.Ghost;
 import assignments.Ex3.Map;
 
 import java.util.ArrayList;
