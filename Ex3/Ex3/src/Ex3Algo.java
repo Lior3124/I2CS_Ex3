@@ -201,7 +201,7 @@ public class Ex3Algo implements PacManAlgo{
      * @param board - represents the game's matrix
      * @return returns int(right -4, left -2, up-1, down-3)
      */
-    private static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
+    public static int followPath(Index2D pacman,Pixel2D[] path,int [][] board){
         Map game  = new Map(board);
 
         //get left right up down based on if cyclic

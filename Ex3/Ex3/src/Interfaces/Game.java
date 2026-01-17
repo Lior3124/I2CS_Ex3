@@ -44,4 +44,5 @@ public interface Game {
      * @return the time that the game is running
      */
     public double getTime();
+
 }

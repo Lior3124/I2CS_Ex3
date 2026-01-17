@@ -15,8 +15,10 @@ public class MyGame implements Game {
     private int _status =0 ; // 0- running , 1- won , (-1)-lost
     private double _time = 0;
     private boolean _cyclic;
-    private int dt = 20;
+    private int _dt = 20;
     private int _ticks=0;
+    private Index2D startPoint_g = new Index2D(11,11);
+    private int _seed =1;
 
     public final int RIGHT = 4;
     public final int LEFT = 2;
@@ -31,7 +33,13 @@ public class MyGame implements Game {
         this._status = 0;
         this._time = 0;
         this._cyclic = cyclic_mode;
-        this.dt = dt;
+        this._dt = dt;
+        this._seed = seed;
+        this._ticks = 0;
+    }
+
+    public Index2D get_pacman() {
+        return _pacman;
     }
 
 
@@ -41,7 +49,7 @@ public class MyGame implements Game {
             return;
         }
         //makes the time real
-        double secondsPassed = this.dt / 1000.0;
+        double secondsPassed = this._dt / 1000.0;
         this._time += secondsPassed;
         _ticks++;
 
@@ -73,8 +81,14 @@ public class MyGame implements Game {
         for(int i=0;i<_ghosts.size();i++){
             if(_ghosts.get(i) instanceof MyGhost){
                 double current_time_eat = _ghosts.get(i).getRemainTimeAsEatable();
-                if(current_time_eat > 0){
+                if(current_time_eat > 0 && _ghosts.get(i).getStatus() == 1){
                     ((MyGhost) _ghosts.get(i)).setRemainTimeAsEatable(Math.max(0, current_time_eat - secondsPassed));
+                } else if (_ghosts.get(i).getStatus()==0) {
+                    ((MyGhost) _ghosts.get(i)).setTimeDead(((MyGhost) _ghosts.get(i)).getTimeDead()+secondsPassed);
+                    if(((MyGhost) _ghosts.get(i)).getTimeDead()>=5){
+                        ((MyGhost) _ghosts.get(i)).setStatus(1);
+                        ((MyGhost) _ghosts.get(i)).setTimeDead(0);
+                    }
                 }
                 if(_ticks%2 == 0){
                     _ghosts.get(i).move(this,i);
@@ -160,6 +174,7 @@ public class MyGame implements Game {
                 if(ghost.getRemainTimeAsEatable()>0){ //the ghost can be eaten
                     if(ghost instanceof MyGhost){
                         ((MyGhost) ghost).setStatus(0);
+                        ((MyGhost) ghost).setPos(startPoint_g);
                     }
                 } else{
                     _status = -1;
@@ -180,5 +195,27 @@ public class MyGame implements Game {
         return true;
     }
 
+    public double get_time(){
+        return _time;
+    }
 
+    public int getSeed(){
+        return _seed;
+    }
+
+    public int get_dt(){
+        return _dt;
+    }
+
+    public void setStartPoint_g(Index2D startPoint_g){
+        this.startPoint_g = startPoint_g;
+    }
+
+    public Map get_map(){
+        return _map;
+    }
+
+    public boolean get_cyclic(){
+        return _cyclic;
+    }
 }
