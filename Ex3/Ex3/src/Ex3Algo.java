@@ -18,6 +18,7 @@ import static assignments.Ex3.GameInfo.CYCLIC_MODE;
  */
 public class Ex3Algo implements PacManAlgo{
     private int _count;
+    private int _prevDir=-1;
     //new variable path, declared here because don't want it to be declared multiple times
 
     public Ex3Algo() {_count=0;}
@@ -55,7 +56,8 @@ public class Ex3Algo implements PacManAlgo{
         int[][] board = game.getGame(0);
         GhostCL[] ghosts = game.getGhosts(0);
 
-        int dir = calculate_path(ghosts,pacman,board);
+        int dir = calculate_path(ghosts,pacman,board,_prevDir);
+        _prevDir= dir;
         return dir;
     }
 
@@ -256,15 +258,14 @@ public class Ex3Algo implements PacManAlgo{
             up = new Index2D(pacman.getX(), (pacman.getY() + 1) % game.getHeight());
             down = new Index2D(pacman.getX(), (pacman.getY() - 1 + game.getHeight()) % game.getHeight());
         }
-
+        if(up.equals(path[1])){
+            return Game.UP;
+        }
         if(right.equals(path[1])){
             return Game.RIGHT;
         }
         if(left.equals(path[1])){
             return Game.LEFT;
-        }
-        if(up.equals(path[1])){
-            return Game.UP;
         }
         if(down.equals(path[1])){
             return Game.DOWN;
@@ -402,7 +403,7 @@ public class Ex3Algo implements PacManAlgo{
      * @param board -represents the game's matrix
      * @return an int based on where pacman should go next in order to run away from the ghosts(right -4, left -2, up-1, down-3)
      */
-    private static int run(GhostCL[] ghosts, Index2D pacman, int [][] board){
+    private static int run(GhostCL[] ghosts, Index2D pacman, int[][] board,int prevDir){
         Map game = new Map(board);
         double max_score = -Double.MAX_VALUE;
         int move = 0;
@@ -433,10 +434,27 @@ public class Ex3Algo implements PacManAlgo{
                 totalDanger = -(ghostDanger * 5) - (greenDist*2);
 
                 if (isDeadEnd(direction,game)) {
-                    totalDanger -= 500.0; //penalty for traps
+                    totalDanger -= 5000.0; //penalty for traps
                 }
                 if (Double.isInfinite(totalDanger)) {
                     totalDanger = -1000000.0*Parameters.min_distance;
+                }
+
+                if(prevDir == 4 && direction.equals(right)){
+                    totalDanger += 5;
+                    System.out.println("right");
+                }
+                if(prevDir == 2 && direction.equals(left)){
+                    totalDanger += 5;
+                    System.out.println("left");
+                }
+                if(prevDir == 1 && direction.equals(up)){
+                    totalDanger += 5;
+                    System.out.println("up");
+                }
+                if(prevDir == 3 && direction.equals(down)){
+                    totalDanger += 5;
+                    System.out.println("down");
                 }
 
                 System.out.println(totalDanger);
@@ -522,7 +540,7 @@ public class Ex3Algo implements PacManAlgo{
      * @param board - represents the game's matrix
      * @return return and int based on where pacman should move
      */
-    private static int calculate_path(GhostCL[] ghosts,Index2D pacman,int [][] board){
+    private static int calculate_path(GhostCL[] ghosts,Index2D pacman,int [][] board,int prevDir){
         int direction = Game.RIGHT;
         Pixel2D[] path = null;
         boolean run = run_state(ghosts,pacman,board);
@@ -537,7 +555,7 @@ public class Ex3Algo implements PacManAlgo{
             if(path == null) System.out.println("Debug: Failed to find path to EATABLE GHOST");
         } else if (run) {
             System.out.println("run");
-            return run(ghosts, pacman, board);
+            return run(ghosts, pacman, board,prevDir);
         }
 
         if(path == null){

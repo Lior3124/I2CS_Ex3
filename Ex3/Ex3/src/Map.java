@@ -330,6 +330,15 @@ public class Map implements Map2D {
                 if(newp.equals(p2)){
                     return count-1;
                 }
+                Index2D up = new Index2D(x, y + 1);
+                int[] up_arr = new int[]{x, y + 1,count};
+                if (cyclic) {
+                     up = new Index2D(x, (y + 1) % this._map.length);
+                     up_arr = new int[]{x, (y + 1) % this._map.length,count};
+                }
+                if (this.isInside(up) && this.getPixel(up) == -1) {
+                    q.add(up_arr);
+                }
 
                 Index2D right = new Index2D(x + 1, y);
                 int[] right_arr = new int[]{x + 1, y,count};
@@ -349,16 +358,6 @@ public class Map implements Map2D {
                 }
                 if (this.isInside(left) && this.getPixel(left) == -1) {
                     q.add(left_arr);
-                }
-
-                Index2D up = new Index2D(x, y + 1);
-                int[] up_arr = new int[]{x, y + 1,count};
-                if (cyclic) {
-                    up = new Index2D(x, (y + 1) % this._map.length);
-                    up_arr = new int[]{x, (y + 1) % this._map.length,count};
-                }
-                if (this.isInside(up) && this.getPixel(up) == -1) {
-                    q.add(up_arr);
                 }
 
                 Index2D down = new Index2D(x, y - 1);
