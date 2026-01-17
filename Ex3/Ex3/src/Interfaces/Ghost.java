@@ -15,9 +15,9 @@ public interface Ghost {
     public int getStatus();
 
     /**
-     * Sets the ghost's next move based on game logic
+     * Sets the ghost's next move based on game logic, the index is the number of the ghosts
      */
-    public void move(Game game);
+    public void move(Game game,int index);
 
     /**
      * @return remaining time the ghost is eatable

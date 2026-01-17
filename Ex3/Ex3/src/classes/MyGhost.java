@@ -25,7 +25,7 @@ public class MyGhost implements Ghost {
     }
 
     @Override
-    public void move(Game game) {
+    public void move(Game game,int index) {
 
     }
 
