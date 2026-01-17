@@ -19,7 +19,6 @@ import static assignments.Ex3.GameInfo.CYCLIC_MODE;
 public class Ex3Algo implements PacManAlgo{
     private int _count;
     private int _prevDir=-1;
-    //new variable path, declared here because don't want it to be declared multiple times
 
     public Ex3Algo() {_count=0;}
     @Override
