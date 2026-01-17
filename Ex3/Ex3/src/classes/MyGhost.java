@@ -41,17 +41,29 @@ public class MyGhost implements Ghost {
 
     @Override
     public void move(Game game,int index) {
+        Index2D start1 = new Index2D(11,11);
+        Index2D start2 = new Index2D(11,12);
+        Index2D start3 = new Index2D(11,13);
+        Index2D start4 = new Index2D(11,14);
         int direction=0;
         if(this._status==0 ){
             return;
         }
         if(game instanceof MyGame) {
             Index2D[] path = null;
-            if (game.getTime() > (index+1) * 3.0) {
+            if (game.getTime() > (index+1) * 2.0) {
                 if (index != 0) {
-                    direction = _rand.nextInt(4) + 1;
+                    int random_num = _rand.nextInt(((MyGame) game).getDifficulty());
+                    if(random_num==0){
+                        path = (Index2D[]) game.getMap().shortestPath(_pos, ((MyGame) game).get_pacman(), 1);
+                        if (path != null && path.length > 1) {
+                            direction = followPath(_pos, path, game.getMap(), (MyGame) game);
+                        }
+                    }else {
+                        direction = _rand.nextInt(4) + 1;
+                    }
                 }else{
-                    path = (Index2D[]) game.getMap().shortestPath(((MyGame) game).get_pacman(),_pos,1);
+                    path = (Index2D[]) game.getMap().shortestPath(_pos, ((MyGame) game).get_pacman(), 1);
                     if (path != null && path.length > 1) {
                         direction = followPath(_pos, path, game.getMap(), (MyGame) game);
                     }

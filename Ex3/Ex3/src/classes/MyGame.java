@@ -8,7 +8,7 @@ import assignments.Ex3.Map;
 import java.util.ArrayList;
 
 public class MyGame implements Game {
-
+    private int difficulty =5;
     private Map _map;
     private Index2D _pacman;
     private ArrayList<Ghost> _ghosts;
@@ -130,7 +130,7 @@ public class MyGame implements Game {
     private void triggerEatable(){
             for (Ghost ghost : _ghosts) {
                 if(ghost instanceof MyGhost && ghost.getStatus() ==1){
-                    ((MyGhost) ghost).setRemainTimeAsEatable(8);
+                    ((MyGhost) ghost).setRemainTimeAsEatable(5);
                 }
             }
     }
@@ -217,5 +217,11 @@ public class MyGame implements Game {
 
     public boolean get_cyclic(){
         return _cyclic;
+    }
+    public void setDifficulty(int difficulty){
+        this.difficulty = difficulty;
+    }
+    public int getDifficulty(){
+        return difficulty;
     }
 }
