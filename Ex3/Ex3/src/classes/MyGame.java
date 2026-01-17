@@ -16,6 +16,7 @@ public class MyGame implements Game {
     private double _time = 0;
     private boolean _cyclic;
     private int dt = 20;
+    private int _ticks=0;
 
     public final int RIGHT = 4;
     public final int LEFT = 2;
@@ -42,6 +43,7 @@ public class MyGame implements Game {
         //makes the time real
         double secondsPassed = this.dt / 1000.0;
         this._time += secondsPassed;
+        _ticks++;
 
         //get wanted movement of pacman
         Index2D move_pacman = null;
@@ -56,16 +58,15 @@ public class MyGame implements Game {
         }
 
         //get movement of pacman based on game
-        if (_map.getPixel(move_pacman) == 3) {
+        if (move_pacman != null && _map.getPixel(move_pacman) != 1) {
+            int pixel = _map.getPixel(move_pacman);
+            if (pixel == 3) { // Pink point
+                _map.setPixel(move_pacman, 0);
+            } else if (pixel == 5) { // green point
+                _map.setPixel(move_pacman, 0);
+                triggerEatable();
+            }
             _pacman = move_pacman;
-            _map.setPixel(move_pacman, 0);
-        }else if(_map.getPixel(move_pacman) == 5){
-            _pacman = move_pacman;
-            _map.setPixel(move_pacman, 0);
-            triggerEatable();
-        }else if(_map.getPixel(move_pacman) == 0){
-            _pacman = move_pacman;
-            _map.setPixel(move_pacman, 0);
         }
 
         //update ghosts time as eatable and move them
@@ -75,7 +76,9 @@ public class MyGame implements Game {
                 if(current_time_eat > 0){
                     ((MyGhost) _ghosts.get(i)).setRemainTimeAsEatable(Math.max(0, current_time_eat - secondsPassed));
                 }
-                _ghosts.get(i).move(this,i);
+                if(_ticks%2 == 0){
+                    _ghosts.get(i).move(this,i);
+                }
             }
         }
 
