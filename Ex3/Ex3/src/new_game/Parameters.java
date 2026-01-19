@@ -1,4 +1,4 @@
-package assignments.Ex3;
+package assignments.Ex3.new_game;
 
 /**
  * A class that has all the parameters needed for the pacman algo
