@@ -1,9 +1,12 @@
 package assignments.Ex3.new_game.classes;
 
 import assignments.Ex3.Index2D;
+import assignments.Ex3.new_game.GUI.GUI;
+import assignments.Ex3.new_game.GUI.StdDraw;
 import assignments.Ex3.new_game.Interfaces.Game;
 import assignments.Ex3.new_game.Interfaces.Ghost;
 import assignments.Ex3.Map;
+import assignments.Ex3.new_game.new_algo;
 
 import java.util.ArrayList;
 
@@ -223,5 +226,33 @@ public class MyGame implements Game {
     }
     public int getDifficulty(){
         return difficulty;
+    }
+
+    public void play(){
+        new_algo algo = new new_algo();
+        GUI.init(this);
+        boolean isGameStarted = false;
+
+        while (_status == 0) {
+
+            if (!isGameStarted) {
+
+                if (StdDraw.isKeyPressed(java.awt.event.KeyEvent.VK_SPACE)) {
+                    isGameStarted = true;
+                }
+                GUI.draw(this);
+                continue;
+            }
+
+
+            int nextDir = algo.move(_ghosts, _pacman, this.getMap().getMap());
+
+            this.move(nextDir);
+
+            GUI.draw(this);
+
+            StdDraw.pause(this.get_dt());
+        }
+
     }
 }
