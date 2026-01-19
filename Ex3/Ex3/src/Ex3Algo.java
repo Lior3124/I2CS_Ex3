@@ -26,7 +26,20 @@ public class Ex3Algo implements PacManAlgo{
      *  Add a short description for the algorithm as a String.
      */
     public String getInfo() {
-        return null;
+        return "the algorithm work in 3 different 'modes', " +
+                "1.eat pinks(pinks meaning food/ point)" +
+                "2.eat ghosts" +
+                "3. run from ghosts" +"" +
+                "but before we go into specifics of the modes let's understand when each mode happens" +
+                "if pacman ate a green dot then there is no danger and pacman can eat everything and not fear any of the ghosts, so if pacman ate a green point(power pellet) and withing a distance(specified in the prameter.java file) from ghost he will enter eat ghosts mode" +
+                "but if pacman ate a green dot but he is far from the ghosts(more than the specified distance) than there is no reason for him to chase ghosts he will not reach, then he enters eat pinks" +
+                "also if there is no ghost near pacman then there is no reason for pacman to fear so he also enter eat pinks mode(specified distance for danger is at parameters.java file)" +
+                "But if a ghost is within the specified distance of pacman than he is in danger of being eaten and enter run from ghosts mode."+"" +
+                "now lets go through how each mode works.(from the most simple)" +
+                "1.eat pinks - we call allDistance on pacman(see map2d interface for more information) and then we go through the all distance map and the original map and look for 1 in the all distance and compare with  3(pink points) or 5(green points) if we found a place where in the alldistance there is a one and in the original map there is 3 or 5 we call shortest-path there (see map2d interface) , if we didn't find we look for all distance 2 and so on until found, the function return " +
+                "2.eat ghosts - here we have 2 main function the first one finds the closest ghost by going through all the ghosts and doing distance2d(look at pixel2d interface for more information) and returning the index2d of the ghost with the smallest distance from pacman, than the other function (closestGhost_path) which does shortestPath and returns the shortest path from pacman to the ghost" +
+                "3.run from ghosts - in order to run from the ghosts we need to decide where to run, in order to it we calculate 'Danger Score' for each possible move, meaning see what directions pacman can go and for each direction we calculate the danger score and the lowest danger score, the danger score is calculated with a few function the first one being calculate danger which calculates the danger of a move by calculating the distance form each ghost(using dis_from_ghost function) for each distance we add (1000.0 / ((distance * distance) + 1) to the total danger of the move,we multiply distance by distance to give more danger to closer points and +1 to not divide by zero," +
+                "                     " ;
     }
     @Override
     /**
