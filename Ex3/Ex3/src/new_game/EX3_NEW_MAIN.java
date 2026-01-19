@@ -13,7 +13,7 @@ public class EX3_NEW_MAIN {
     public static void main(String[] args) {
         game_settings gs = new game_settings();
 
-        play1(gs.getBoard(),gs.getPacman(),gs.getGhostHouse(),gs.getSeed(), gs.getDt(),gs.isCyclic_mode(), gs.getDifficulty());
+        play1(gs.getBoard(),gs.getPacman(),gs.getGhostHouse(),gs.getSeed(), gs.getDt(),gs.isCyclic_mode(),gs.getDifficulty());
     }
 
 

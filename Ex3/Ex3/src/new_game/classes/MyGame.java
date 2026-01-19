@@ -240,7 +240,7 @@ public class MyGame implements Game {
                 if (StdDraw.isKeyPressed(java.awt.event.KeyEvent.VK_SPACE)) {
                     isGameStarted = true;
                 }
-                GUI.draw(this);
+                GUI.draw(this,isGameStarted);
                 continue;
             }
 
@@ -249,7 +249,7 @@ public class MyGame implements Game {
 
             this.move(nextDir);
 
-            GUI.draw(this);
+            GUI.draw(this,isGameStarted);
 
             StdDraw.pause(this.get_dt());
         }

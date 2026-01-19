@@ -6,55 +6,74 @@ import assignments.Ex3.Map;
 import assignments.Ex3.new_game.classes.MyGame;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 public class GUI {
 
-    //Initialize the window based on your map size
     public static void init(MyGame game) {
         int w = game.getMap().getWidth();
         int h = game.getMap().getHeight();
         StdDraw.setCanvasSize(600, 600);
-        StdDraw.setXscale(-1, w);
-        StdDraw.setYscale(-1, h);
+        StdDraw.setXscale(0, w);
+        StdDraw.setYscale(0, h);
         StdDraw.enableDoubleBuffering();
     }
 
-    public static void draw(MyGame game) {
-        StdDraw.clear(Color.BLACK);
 
-        //Draw the map (Walls and Dots)
+    public static void draw(MyGame game, boolean isGameStarted) {
+        StdDraw.clear(Color.WHITE);
         Map map = game.getMap();
         for (int x = 0; x <= map.getWidth(); x++) {
             for (int y = 0; y <= map.getHeight(); y++) {
                 int pixel = map.getPixel(x, y);
                 if (pixel == 1) { // Wall
                     StdDraw.setPenColor(Color.BLUE);
-                    StdDraw.filledSquare(x, y, 0.3);
+                    StdDraw.filledSquare(x, y, 0.5);
+                    StdDraw.picture(x, y, "wall1.png", 0.5 * 2, 0.5 * 2);
                 } else if (pixel == 3 || pixel == 5) { // Dots/Powerups
-                    StdDraw.setPenColor(pixel == 3 ? Color.PINK : Color.GREEN);
-                    StdDraw.filledCircle(x, y, 0.2);
+                    if(pixel ==3) {
+                        StdDraw.picture(x, y, "point2.png", 0.4 * 2, 0.4 * 2);
+                    }else{
+                        StdDraw.picture(x, y, "point6.jpg", 0.4 * 2, 0.4 * 2);
+                    }
                 }
             }
         }
 
-        //Draw Pacman using your Index2D
+
+        // 2. Draw Pacman
         Index2D pac = game.get_pacman();
         StdDraw.setPenColor(Color.YELLOW);
-        StdDraw.filledCircle(pac.getX(), pac.getY(), 0.5);
+        StdDraw.filledCircle(pac.getX(), pac.getY(), 0.4);
+        StdDraw.picture(pac.getX(), pac.getY(), "pacman3.jpg", 0.4 * 2, 0.4 * 2);
 
-        // 3. Draw Ghosts using your ArrayList<Ghost>
-        ArrayList<Ghost> ghosts = game.getGhosts();
-        for (Ghost g : ghosts) {
-            if (g.getStatus() == 1) { // Only draw if alive
-                // Cyan if eatable, Red if dangerous
-                if (g.getRemainTimeAsEatable() > 0) StdDraw.setPenColor(Color.CYAN);
-                else StdDraw.setPenColor(Color.RED);
+        // 3. Draw Ghosts
+        for (Ghost g : game.getGhosts()) {
+            if (g.getStatus() == 1) {
+                if (g.getRemainTimeAsEatable() > 0){
+                    StdDraw.setPenColor(Color.CYAN);
+                    StdDraw.picture(g.getPos().getX(), g.getPos().getY(), "ghost2.jpg", 0.4 * 2, 0.4 * 2);
 
-                StdDraw.filledCircle(g.getPos().getX(), g.getPos().getY(), 0.4);
+                }
+                else {
+                    StdDraw.setPenColor(Color.RED);
+                    StdDraw.picture(g.getPos().getX(), g.getPos().getY(), "ghost1.png", 0.4 * 2, 0.4 * 2);
+                }
             }
+        }
+
+        // 4. Start Button
+        if (!isGameStarted) {
+            drawStartScreen(map.getWidth(), map.getHeight());
         }
 
         StdDraw.show();
     }
+
+    private static void drawStartScreen(int w, int h) {
+        StdDraw.setPenColor(new Color(0, 0, 0, 150)); // Dark overlay
+        StdDraw.filledRectangle(w / 2.0, h / 2.0, w, h);
+        StdDraw.setPenColor(Color.PINK);
+        StdDraw.text(w / 2.0, h / 2.0, "Press 'SPACE' to Start Game");
+    }
+
 }
