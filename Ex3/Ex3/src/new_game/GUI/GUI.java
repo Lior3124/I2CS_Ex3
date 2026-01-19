@@ -64,9 +64,31 @@ public class GUI {
         // 4. Start Button
         if (!isGameStarted) {
             drawStartScreen(map.getWidth(), map.getHeight());
+            playBackgroundMusic("pacman_beginning.wav",0.1);
         }
 
         StdDraw.show();
+    }
+
+    public static void playBackgroundMusic(String filename, double volume) {
+        new Thread(() -> {
+            try {
+                // Read the sound file into an array of samples
+                double[] samples = StdAudio.read(filename);
+
+                // Multiply every sample by the volume factor (e.g., 0.2 for 20% volume)
+                for (int i = 0; i < samples.length; i++) {
+                    samples[i] *= volume;
+                }
+
+                // Loop the modified samples
+                while (true) {
+                    StdAudio.play(samples);
+                }
+            } catch (Exception e) {
+                System.out.println("Error playing music: " + e.getMessage());
+            }
+        }).start();
     }
 
     private static void drawStartScreen(int w, int h) {
