@@ -33,6 +33,9 @@ public class game_settings {
     private int seed = 5;
     private int dt = 100;
     private boolean cyclic_mode = true;
+    private int difficulty = 5;
+
+
 
     public int getDt() {
         return dt;
@@ -57,4 +60,9 @@ public class game_settings {
     public Index2D getPacman() {
         return pacman;
     }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
 }

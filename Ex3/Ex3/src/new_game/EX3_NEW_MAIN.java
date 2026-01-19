@@ -12,15 +12,18 @@ public class EX3_NEW_MAIN {
 
     public static void main(String[] args) {
         game_settings gs = new game_settings();
-        play1(gs.getBoard(),gs.getPacman(),gs.getGhostHouse(),gs.getSeed(), gs.getDt(),gs.isCyclic_mode());
+
+        play1(gs.getBoard(),gs.getPacman(),gs.getGhostHouse(),gs.getSeed(), gs.getDt(),gs.isCyclic_mode(), gs.getDifficulty());
     }
 
 
-    public static void play1(int[][] board,Index2D pacman,Index2D ghostHouse,int seed,int dt,boolean cyclic_mode) {
+    public static void play1(int[][] board,Index2D pacman,Index2D ghostHouse,int seed,int dt,boolean cyclic_mode,int difficulty) {
         new_algo algo = new new_algo();
         Map map = new Map(board);
         MyGame ex3 = new MyGame();
         ArrayList<Ghost> ghosts = new ArrayList<>();
+
+        ex3.setDifficulty(difficulty);
 
         for (int i = 0; i < 5; i++) {
             ghosts.add(new MyGhost(ghostHouse, seed));
