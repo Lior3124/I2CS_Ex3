@@ -6,6 +6,14 @@ This is assigment #3 at Ariel University, School of Computer Science, 2026.
 This assignment focuses on OOP, code reuse, and putting it all together (aka integration).
 
 **note: i didn't create a jar and realeses because i have a problem with creating jars(I can't even open the jar that was given), another thing is in the video that was submmited in the forms i accidentaly said that higher difficulty means harder to win but it's the opssoite**
+
+## 🚀 How to Run
+1. Clone the repository.
+2. Open the project in your IDE (IntelliJ/Eclipse).
+3. Run `EX3_NEW_MAIN.java` for the server-side version.
+4. **Controls:** Press **SPACE** to start the game.
+
+
 ## ***Files***
 
 *__How the algorithim works-__*
