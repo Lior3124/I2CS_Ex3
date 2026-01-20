@@ -221,6 +221,6 @@ This assignment focuses on OOP, code reuse, and putting it all together (aka int
 
 
 ## ***Result***
-
+This is how to clines side looks.
 ![result](ScreenShot_pacman.png)
 
